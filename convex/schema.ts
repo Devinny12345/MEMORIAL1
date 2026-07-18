@@ -6,6 +6,7 @@ export default defineSchema({
     name: v.string(),
     message: v.string(),
     storageId: v.optional(v.id("_storage")),
+    photoUrl: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_createdAt", ["createdAt"]),
 

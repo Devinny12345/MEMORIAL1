@@ -42,7 +42,7 @@ export const getTributes = query({
           name: t.name,
           message: t.message,
           createdAt: new Date(t.createdAt).toISOString(),
-          photoUrl: photoUrl || undefined,
+          photoUrl: photoUrl || t.photoUrl || undefined,
           comments: comments.map((c) => ({
             id: c._id,
             author: c.author,
@@ -53,6 +53,42 @@ export const getTributes = query({
         };
       })
     );
+  },
+});
+
+/** Seed default starter tributes if they do not exist */
+export const seedDefaults = mutation({
+  args: {},
+  handler: async (ctx) => {
+    // Check if moments-1.jpg exists
+    const existing1 = await ctx.db
+      .query("tributes")
+      .filter((q) => q.eq(q.field("photoUrl"), "/moments-1.jpg"))
+      .first();
+
+    if (!existing1) {
+      await ctx.db.insert("tributes", {
+        name: "Family",
+        message: "Forever loved",
+        photoUrl: "/moments-1.jpg",
+        createdAt: Date.now() - 100000,
+      });
+    }
+
+    // Check if Main.jpg exists
+    const existing2 = await ctx.db
+      .query("tributes")
+      .filter((q) => q.eq(q.field("photoUrl"), "/Main.jpg"))
+      .first();
+
+    if (!existing2) {
+      await ctx.db.insert("tributes", {
+        name: "Family",
+        message: "Beautiful memories",
+        photoUrl: "/Main.jpg",
+        createdAt: Date.now() - 50000,
+      });
+    }
   },
 });
 

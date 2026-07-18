@@ -261,9 +261,12 @@ function MemorialPageWithConvex() {
   const [isSubmittingLightboxComment, setIsSubmittingLightboxComment] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const seedDefaults = useMutation(api.tributes.seedDefaults);
+
   useEffect(() => {
     setSessionId(getSessionId());
-  }, []);
+    seedDefaults().catch((e) => console.error("Failed to seed default tributes:", e));
+  }, [seedDefaults]);
 
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -361,7 +364,7 @@ function MemorialPageWithConvex() {
       tribute: t,
     }));
 
-  const allPhotos = [...dbPhotos, ...defaultPhotos];
+  const allPhotos = dbPhotos;
 
   // Resolve the live tribute from tributes array so heart/comments update in real-time inside lightbox
   const liveTribute = activePhoto?.tribute
