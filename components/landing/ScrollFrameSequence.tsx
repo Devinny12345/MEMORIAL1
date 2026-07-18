@@ -2,131 +2,85 @@
 import { useRef, useEffect, useState, ReactNode } from "react";
 
 const TOTAL_FRAMES = 106;
-const PLAYBACK_FPS = 18; // Cinematic frame rate for smooth autoplay (adjust to speed up/slow down)
+const FRAME_VH = 5;
 
 function getFrameSrc(i: number) {
   return `/frames/frame-${String(i).padStart(3, "0")}.jpg`;
 }
 
 export function ScrollFrameSequence({ children }: { children: ReactNode }) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
-  const rafRef = useRef<number | null>(null);
-
-  const [loaded, setLoaded] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [currentFrame, setCurrentFrame] = useState(1);
+  const [ready, setReady] = useState(false);
   const frameCacheRef = useRef<HTMLImageElement[]>([]);
 
-  // ── Preload all frames to prevent flickering ─────────────────────────────
   useEffect(() => {
-    let loadedCount = 0;
-
-    // Load first image first to unlock display quickly
-    const firstImg = new Image();
-    firstImg.src = getFrameSrc(1);
-    firstImg.onload = () => {
-      frameCacheRef.current[0] = firstImg;
-      loadedCount++;
-      // Preload the rest asynchronously
-      for (let i = 2; i <= TOTAL_FRAMES; i++) {
-        const img = new Image();
-        img.src = getFrameSrc(i);
-        img.onload = () => {
-          loadedCount++;
-          if (loadedCount === TOTAL_FRAMES) {
-            setLoaded(true);
-          }
-        };
-        frameCacheRef.current[i - 1] = img;
-      }
-      
-      // In case some images fail to notify or load instantly
-      setTimeout(() => {
-        setLoaded(true);
-      }, 1500);
-    };
+    let loaded = 0;
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image();
+      img.src = getFrameSrc(i);
+      img.onload = () => {
+        loaded++;
+        if (loaded === TOTAL_FRAMES) setReady(true);
+      };
+      frameCacheRef.current[i - 1] = img;
+    }
   }, []);
 
-  // ── Frame autoplay cycle loop ───────────────────────────────────────────
   useEffect(() => {
-    if (!loaded) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    let lastTime = performance.now();
-    const interval = 1000 / PLAYBACK_FPS;
-    let currentFrame = 1;
-    let active = true;
+    const framePx = container.clientHeight / TOTAL_FRAMES;
 
-    const tick = (now: number) => {
-      if (!active) return;
-
-      const elapsed = now - lastTime;
-
-      // When the elapsed time surpasses our target frame interval, advance the frame
-      if (elapsed >= interval) {
-        currentFrame = (currentFrame % TOTAL_FRAMES) + 1;
-        
-        if (imgRef.current) {
-          imgRef.current.src = getFrameSrc(currentFrame);
-        }
-        
-        // Adjust lastTime to handle slight rendering lag smoothly
-        lastTime = now - (elapsed % interval);
-      }
-
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-
-    return () => {
-      active = false;
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+    const handleScroll = () => {
+      if (!container) return;
+      const frame = Math.min(
+        TOTAL_FRAMES,
+        Math.max(1, Math.floor(container.scrollTop / framePx) + 1)
+      );
+      if (frame !== currentFrame) {
+        setCurrentFrame(frame);
       }
     };
-  }, [loaded]);
 
-  if (!loaded) {
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [currentFrame]);
+
+  useEffect(() => {
+    if (!ready) return;
+    const timer = setInterval(() => {
+      setCurrentFrame((prev) => (prev >= TOTAL_FRAMES ? 1 : prev + 1));
+    }, 60);
+    return () => clearInterval(timer);
+  }, [ready]);
+
+  if (!ready) {
     return (
-      <div style={{ height: "100vh" }}>
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            background: "var(--rose)",
-          }}
-        >
-          <p style={{ color: "var(--muted)", fontSize: 14 }}>Loading memorial background…</p>
-        </div>
+      <div style={{ height: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "var(--rose)" }}>
+        <p style={{ color: "var(--muted)", fontSize: 14 }}>Loading…</p>
       </div>
     );
   }
 
   return (
     <div
-      ref={wrapperRef}
-      style={{ height: "100vh", position: "relative" }}
+      ref={containerRef}
+      style={{ height: `${TOTAL_FRAMES * FRAME_VH}vh`, position: "relative", overflow: "auto" }}
+      aria-hidden="true"
     >
-      <div className="hero-scroll-pin" style={{ position: "relative" }}>
-        {/* Autoplay animated background image */}
+      <div className="hero-scroll-pin">
         <img
-          ref={imgRef}
-          src={getFrameSrc(1)}
-          alt=""
-          aria-hidden="true"
+          src={getFrameSrc(currentFrame)}
+          alt="Memorial animation"
           className="hero-scroll-bg"
         />
-
-        {/* Colour overlay + vignette */}
         <div className="hero-scroll-overlay" />
-
-        {/* Bottom dissolve — fades the background into the timeline section */}
         <div className="hero-scroll-dissolve" />
-
-        {/* Hero content identity */}
-        <div className="hero-scroll-content">{children}</div>
+        <div className="hero-scroll-content">
+          {children}
+        </div>
       </div>
     </div>
   );

@@ -757,45 +757,46 @@ function MemorialPageWithConvex() {
           opacity: 1;
         }
         
-        /* ── Side-by-Side Lightbox Card ────────────────────────────────────── */
+        /* ── Stacked Lightbox Card ────────────────────────────────────── */
         .lightbox-modal-card {
           display: flex;
+          flex-direction: column;
           background: white;
           border-radius: 8px;
-          max-width: 960px;
+          max-width: 800px;
           width: 100%;
-          max-height: 80vh;
-          overflow: hidden;
+          max-height: 90vh;
+          overflow-y: auto;
           box-shadow: 0 20px 50px rgba(0,0,0,0.5);
           cursor: default;
         }
         .lightbox-left {
-          flex: 1.4;
-          background: #110c0e;
+          width: 100%;
+          background: #100a0c;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 10px;
-          max-height: 80vh;
+          padding: 0;
+          max-height: 75vh;
           overflow: hidden;
         }
         .lightbox-card-img {
-          max-width: 100%;
-          max-height: calc(80vh - 20px);
+          width: 100%;
+          max-height: 75vh;
           object-fit: contain;
+          display: block;
         }
         
         .lightbox-right {
-          flex: 1;
+          width: 100%;
           display: flex;
           flex-direction: column;
           background: white;
           color: var(--ink);
-          max-height: 80vh;
-          border-left: 1px solid #ebcbd0;
+          border-top: 1px solid #ebcbd0;
         }
         .lightbox-header {
-          padding: 20px;
+          padding: 24px 24px 16px;
           border-bottom: 1px solid #f6e6e8;
           background: var(--paper);
         }
@@ -808,37 +809,33 @@ function MemorialPageWithConvex() {
         }
         .lightbox-caption-text {
           font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(1rem, 1.8vw, 1.25rem);
+          font-size: clamp(1.1rem, 2vw, 1.4rem);
           font-style: italic;
           line-height: 1.45;
-          margin: 6px 0 0;
+          margin: 8px 0 0;
           color: var(--plum);
         }
         
         /* Lightbox DB interaction */
         .lightbox-interaction-area {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-          padding: 20px;
+          padding: 24px;
         }
         .lightbox-actions-bar {
           display: flex;
           border-bottom: 1px solid #f6e6e8;
-          padding-bottom: 12px;
-          margin-bottom: 16px;
+          padding-bottom: 16px;
+          margin-bottom: 20px;
         }
         .lightbox-action-btn {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
+          gap: 8px;
           background: transparent;
           border: 1px solid #ebcbd0;
           border-radius: 4px;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 600;
-          padding: 6px 14px;
+          padding: 8px 18px;
           color: var(--muted);
           cursor: pointer;
           transition: all 0.2s;
@@ -854,36 +851,24 @@ function MemorialPageWithConvex() {
         }
         
         .lightbox-comments-list-wrapper {
-          flex: 1;
           display: flex;
           flex-direction: column;
-          overflow: hidden;
         }
         .lightbox-comments-list-wrapper h4 {
-          font-size: 11px;
+          font-size: 12px;
           text-transform: uppercase;
           letter-spacing: 0.05em;
           color: var(--wine);
-          margin: 0 0 10px;
+          margin: 0 0 14px;
         }
         .lightbox-comments-list {
-          flex: 1;
-          overflow-y: auto;
           display: flex;
           flex-direction: column;
           gap: 12px;
-          padding-right: 4px;
-        }
-        .lightbox-comments-list::-webkit-scrollbar {
-          width: 4px;
-        }
-        .lightbox-comments-list::-webkit-scrollbar-thumb {
-          background: var(--blush);
-          border-radius: 2px;
         }
         .lightbox-comments-empty {
           color: var(--muted);
-          font-size: 13px;
+          font-size: 14px;
           font-style: italic;
           margin: 10px 0;
         }
@@ -891,13 +876,13 @@ function MemorialPageWithConvex() {
           background: rgba(125,63,77,0.02);
           border: 1px solid rgba(125,63,77,0.04);
           border-radius: 6px;
-          padding: 10px 14px;
+          padding: 12px 16px;
         }
         .lightbox-comment-meta {
           display: flex;
           justify-content: space-between;
           font-size: 11px;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
         }
         .lightbox-comment-meta strong {
           color: var(--plum);
@@ -906,7 +891,7 @@ function MemorialPageWithConvex() {
           color: var(--muted);
         }
         .lightbox-comment-item p {
-          font-size: 13px;
+          font-size: 14px;
           line-height: 1.45;
           margin: 0;
           color: var(--ink);
@@ -914,20 +899,20 @@ function MemorialPageWithConvex() {
         
         .lightbox-comment-form {
           border-top: 1px solid #f6e6e8;
-          padding: 20px;
+          padding: 24px;
           background: var(--paper);
         }
         .lightbox-input-group {
           display: flex;
           flex-direction: column;
-          gap: 8px;
+          gap: 10px;
         }
         .lightbox-input {
           width: 100%;
           border: 1px solid #ebcbd0;
           border-radius: 4px;
-          padding: 8px 12px;
-          font-size: 13px;
+          padding: 10px 14px;
+          font-size: 14px;
           outline: none;
         }
         .lightbox-input:focus {
@@ -935,11 +920,11 @@ function MemorialPageWithConvex() {
           box-shadow: 0 0 0 2px rgba(231,174,184,0.15);
         }
         .lightbox-input.author {
-          max-width: 150px;
+          max-width: 180px;
         }
         .lightbox-text-row {
           display: flex;
-          gap: 8px;
+          gap: 10px;
         }
         .lightbox-input.text {
           flex: 1;
@@ -950,8 +935,8 @@ function MemorialPageWithConvex() {
           color: white;
           border: none;
           border-radius: 4px;
-          padding: 0 16px;
-          font-size: 12px;
+          padding: 0 24px;
+          font-size: 13px;
           font-weight: 600;
           cursor: pointer;
           transition: background 0.2s;
@@ -961,7 +946,7 @@ function MemorialPageWithConvex() {
         }
         
         .lightbox-starter-details {
-          padding: 40px 20px;
+          padding: 40px 24px;
           text-align: center;
           color: var(--muted);
         }
