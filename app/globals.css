@@ -291,10 +291,26 @@ h1{font-size:clamp(3.7rem,8.4vw,7.6rem);line-height:.91;letter-spacing:-.06em}
 h2{font-size:clamp(2.5rem,5vw,4.7rem);line-height:1;letter-spacing:-.055em}
 h2 em,h1 em{font-weight:400;color:var(--wine)}
 .memorial-nav{height:72px;width:100%;padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;background:#fffaf4f0;border-bottom:1px solid #ebcbd0;box-shadow:0 4px 24px #7d3f4d14;backdrop-filter:blur(16px)}
-.mark{font:italic 23px 'Playfair Display',serif;color:var(--wine)}
+.mark{font:italic 23px 'Playfair Display',serif;color:var(--wine);white-space:nowrap}
 .memorial-nav nav{display:flex;gap:28px;font-size:12px;color:var(--muted)}
 .memorial-nav nav a:hover{color:var(--wine)}
-.nav-memory{font-size:12px;border-bottom:1px solid var(--wine);padding-bottom:4px;color:var(--wine)}
+.nav-memory{font-size:12px;border-bottom:1px solid var(--wine);padding-bottom:4px;color:var(--wine);white-space:nowrap}
+
+/* ── Tablet ──────────────────────────────────────────────────────────────── */
+@media (min-width:641px) and (max-width:1024px) {
+  .memorial-nav{padding:0 20px}
+  .mark{font-size:20px}
+  .memorial-nav nav{gap:18px;font-size:11px}
+  .nav-memory{font-size:11px}
+}
+
+/* ── Phone ───────────────────────────────────────────────────────────────── */
+@media (max-width:640px) {
+  .memorial-nav{height:56px;padding:0 14px;gap:6px}
+  .mark{font-size:16px}
+  .memorial-nav nav{gap:12px;font-size:10px}
+  .nav-memory{font-size:10px;padding-bottom:2px}
+}
 
 .eyebrow{font-size:10px;letter-spacing:.15em;text-transform:uppercase;font-weight:600;color:var(--wine);margin-bottom:25px}
 .hero-date-card{display:flex;gap:13px;align-items:center;margin-top:24px;font:italic 18px 'Playfair Display',serif;color:var(--wine)}
