@@ -259,6 +259,7 @@ function MemorialPageWithConvex() {
   const [lightboxAuthor, setLightboxAuthor] = useState("");
   const [lightboxText, setLightboxText] = useState("");
   const [isSubmittingLightboxComment, setIsSubmittingLightboxComment] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const seedDefaults = useMutation(api.tributes.seedDefaults);
@@ -364,7 +365,14 @@ function MemorialPageWithConvex() {
       tribute: t,
     }));
 
-  const allPhotos = dbPhotos;
+  const defaultPhotos = [
+    { url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=85", caption: "A beautiful soul, remembered always.", author: "Family" },
+    { url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=85", caption: "Her light continues to shine.", author: "Family" },
+    { url: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=85", caption: "Laughter that echoed through every room.", author: "Family" },
+    { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=85", caption: "Forever in our hearts.", author: "Family" },
+  ];
+
+  const allPhotos = [...dbPhotos, ...defaultPhotos.filter((dp) => !dbPhotos.some((db) => db.url === dp.url))];
 
   // Resolve the live tribute from tributes array so heart/comments update in real-time inside lightbox
   const liveTribute = activePhoto?.tribute
@@ -618,371 +626,354 @@ function MemorialPageWithConvex() {
         </footer>
       </main>
 
-      {/* Lightbox Modal (with fully integrated comments and hearts for uploaded photos) */}
+      {/* Lightbox — full-bleed photo with overlay heart + comment */}
       <AnimatePresence>
         {activePhoto && (
-          <motion.div 
-            className="lightbox-overlay"
+          <motion.div
+            className="lb-overlay"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setActivePhoto(null)}
+            onClick={() => { setActivePhoto(null); setShowComments(false); }}
           >
-            <button className="lightbox-close-btn" onClick={() => setActivePhoto(null)} aria-label="Close Lightbox">
+            <button className="lb-close" onClick={() => { setActivePhoto(null); setShowComments(false); }} aria-label="Close">
               <X size={24} />
             </button>
-            <motion.div 
-              className="lightbox-modal-card"
-              initial={{ scale: 0.96, opacity: 0 }}
+
+            <motion.div
+              className="lb-photo-wrap"
+              initial={{ scale: 0.94, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.96, opacity: 0 }}
+              exit={{ scale: 0.94, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Left Column: Photo Image */}
-              <div className="lightbox-left">
-                <img src={activePhoto.url} alt={activePhoto.caption} className="lightbox-card-img" />
-              </div>
-              
-              {/* Right Column: Interaction & Comments */}
-              <div className="lightbox-right">
-                <div className="lightbox-header">
-                  <span className="lightbox-author-tag">— Shared by {activePhoto.author}</span>
-                  <p className="lightbox-caption-text">"{activePhoto.caption}"</p>
-                </div>
-                
+              <img src={activePhoto.url} alt={activePhoto.caption} className="lb-photo" />
+
+              {/* Bottom toolbar */}
+              <div className="lb-toolbar">
                 {liveTribute ? (
                   <>
-                    {/* Live Interaction & Comments area */}
-                    <div className="lightbox-interaction-area">
-                      <div className="lightbox-actions-bar">
-                        <button
-                          onClick={() => handleLightboxHeartClick(liveTribute)}
-                          className={`lightbox-action-btn heart ${liveTribute.hearts.includes(sessionId) ? "active" : ""}`}
-                          aria-label="Heart this photo"
-                        >
-                          <Heart size={16} fill={liveTribute.hearts.includes(sessionId) ? "currentColor" : "none"} />
-                          <span>{liveTribute.hearts.length} {liveTribute.hearts.length === 1 ? "Heart" : "Hearts"}</span>
-                        </button>
-                      </div>
-
-                      <div className="lightbox-comments-list-wrapper">
-                        <h4>Comments ({liveTribute.comments.length})</h4>
-                        {liveTribute.comments.length === 0 ? (
-                          <p className="lightbox-comments-empty">Be the first to share a warm word.</p>
-                        ) : (
-                          <div className="lightbox-comments-list">
-                            {liveTribute.comments.map((comment: any) => (
-                              <div key={comment.id} className="lightbox-comment-item">
-                                <div className="lightbox-comment-meta">
-                                  <strong>{comment.author}</strong>
-                                  <span>
-                                    {new Date(comment.createdAt).toLocaleDateString(undefined, {
-                                      month: "short",
-                                      day: "numeric",
-                                    })}
-                                  </span>
-                                </div>
-                                <p>{comment.text}</p>
-                              </div>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    <form onSubmit={(e) => handleLightboxCommentSubmit(e, liveTribute)} className="lightbox-comment-form">
-                      <div className="lightbox-input-group">
-                        <input
-                          type="text"
-                          placeholder="Your name"
-                          value={lightboxAuthor}
-                          onChange={(e) => setLightboxAuthor(e.target.value)}
-                          required
-                          className="lightbox-input author"
-                        />
-                        <div className="lightbox-text-row">
-                          <textarea
-                            placeholder="Write a message..."
-                            value={lightboxText}
-                            onChange={(e) => setLightboxText(e.target.value)}
-                            required
-                            rows={1}
-                            className="lightbox-input text"
-                          />
-                          <button type="submit" disabled={isSubmittingLightboxComment} className="lightbox-send-btn">
-                            Send
-                          </button>
-                        </div>
-                      </div>
-                    </form>
+                    <button
+                      className={`lb-tool-btn ${liveTribute.hearts.includes(sessionId) ? "hearted" : ""}`}
+                      onClick={() => handleLightboxHeartClick(liveTribute)}
+                    >
+                      <Heart size={18} fill={liveTribute.hearts.includes(sessionId) ? "currentColor" : "none"} />
+                      <span>{liveTribute.hearts.length}</span>
+                    </button>
+                    <button
+                      className={`lb-tool-btn ${showComments ? "active" : ""}`}
+                      onClick={() => setShowComments(v => !v)}
+                    >
+                      <MessageCircleHeart size={18} />
+                      <span>{liveTribute.comments.length}</span>
+                    </button>
                   </>
                 ) : (
-                  <div className="lightbox-starter-details">
-                    <p className="starter-label">Featured Gallery Photo</p>
-                    <small>Comments and hearts are available for guest-shared photographs.</small>
-                  </div>
+                  <>
+                    <button className="lb-tool-btn" onClick={() => setShowComments(v => !v)}>
+                      <Heart size={18} />
+                      <span>0</span>
+                    </button>
+                    <button className="lb-tool-btn" onClick={() => setShowComments(v => !v)}>
+                      <MessageCircleHeart size={18} />
+                      <span>0</span>
+                    </button>
+                  </>
                 )}
+                <div className="lb-caption-tag">
+                  <span className="lb-author">{activePhoto.author}</span>
+                  <span className="lb-caption-text">{activePhoto.caption}</span>
+                </div>
               </div>
             </motion.div>
+
+            {/* Comment slide-up panel */}
+            <AnimatePresence>
+              {showComments && liveTribute && (
+                <motion.div
+                  className="lb-comments-panel"
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "100%" }}
+                  transition={{ type: "spring", damping: 28, stiffness: 300 }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="lb-comments-header">
+                    <h4>Comments ({liveTribute.comments.length})</h4>
+                    <button className="lb-comments-close" onClick={() => setShowComments(false)}>
+                      <X size={18} />
+                    </button>
+                  </div>
+
+                  <div className="lb-comments-list">
+                    {liveTribute.comments.length === 0 ? (
+                      <p className="lb-comments-empty">Be the first to share a warm word.</p>
+                    ) : (
+                      liveTribute.comments.map((comment: any) => (
+                        <div key={comment.id} className="lb-comment-item">
+                          <div className="lb-comment-meta">
+                            <strong>{comment.author}</strong>
+                            <span>{new Date(comment.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
+                          </div>
+                          <p>{comment.text}</p>
+                        </div>
+                      ))
+                    )}
+                  </div>
+
+                  <form onSubmit={(e) => handleLightboxCommentSubmit(e, liveTribute)} className="lb-comment-form">
+                    <input
+                      type="text"
+                      placeholder="Your name"
+                      value={lightboxAuthor}
+                      onChange={(e) => setLightboxAuthor(e.target.value)}
+                      required
+                      className="lb-input"
+                    />
+                    <div className="lb-comment-row">
+                      <input
+                        type="text"
+                        placeholder="Write a message..."
+                        value={lightboxText}
+                        onChange={(e) => setLightboxText(e.target.value)}
+                        required
+                        className="lb-input lb-input-text"
+                      />
+                      <button type="submit" disabled={isSubmittingLightboxComment} className="lb-send-btn">
+                        Send
+                      </button>
+                    </div>
+                  </form>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>
 
       <style jsx global>{`
-        .lightbox-overlay {
+        /* ── Full-bleed lightbox ──────────────────────────────────────── */
+        .lb-overlay {
           position: fixed;
           inset: 0;
-          background: rgba(16, 10, 12, 0.92);
-          backdrop-filter: blur(12px);
+          background: rgba(16,10,12,.94);
+          backdrop-filter: blur(8px);
           z-index: 1000;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 20px;
           cursor: zoom-out;
         }
-        .lightbox-close-btn {
+        .lb-close {
           position: absolute;
-          top: 24px;
-          right: 24px;
-          background: transparent;
+          top: 16px;
+          right: 16px;
+          background: rgba(255,255,255,.12);
           border: none;
           color: white;
-          cursor: pointer;
-          opacity: 0.7;
-          transition: opacity 0.2s;
-          z-index: 1010;
-        }
-        .lightbox-close-btn:hover {
-          opacity: 1;
-        }
-        
-        /* ── Stacked Lightbox Card ────────────────────────────────────── */
-        .lightbox-modal-card {
-          display: flex;
-          flex-direction: column;
-          background: white;
-          border-radius: 8px;
-          width: fit-content;
-          min-width: 450px;
-          max-width: 94vw;
-          max-height: 96vh;
-          overflow-y: auto;
-          box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-          cursor: default;
-          margin: auto;
-        }
-        .lightbox-left {
-          width: 100%;
-          background: #100a0c;
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 0;
-          max-height: 78vh;
-          overflow: hidden;
+          cursor: pointer;
+          z-index: 1020;
+          transition: background .2s;
         }
-        .lightbox-card-img {
-          width: auto;
-          height: auto;
-          max-height: 78vh;
+        .lb-close:hover { background: rgba(255,255,255,.25); }
+        .lb-photo-wrap {
+          position: relative;
+          max-width: 92vw;
+          max-height: 88vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          cursor: default;
+        }
+        .lb-photo {
           max-width: 100%;
+          max-height: 80vh;
           object-fit: contain;
+          border-radius: 6px;
+          box-shadow: 0 20px 60px rgba(0,0,0,.5);
           display: block;
         }
-        
-        .lightbox-right {
-          width: 100%;
+        .lb-toolbar {
           display: flex;
-          flex-direction: column;
-          background: white;
-          color: var(--ink);
-          border-top: 1px solid #ebcbd0;
+          align-items: center;
+          gap: 12px;
+          margin-top: 14px;
+          padding: 10px 18px;
+          background: rgba(255,255,255,.1);
+          border-radius: 30px;
+          backdrop-filter: blur(6px);
         }
-        .lightbox-header {
-          padding: 24px 24px 16px;
-          border-bottom: 1px solid #f6e6e8;
-          background: var(--paper);
-        }
-        .lightbox-author-tag {
-          font-size: 11px;
-          font-weight: 600;
-          text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: var(--wine);
-        }
-        .lightbox-caption-text {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: clamp(1.1rem, 2vw, 1.4rem);
-          font-style: italic;
-          line-height: 1.45;
-          margin: 8px 0 0;
-          color: var(--plum);
-        }
-        
-        /* Lightbox DB interaction */
-        .lightbox-interaction-area {
-          padding: 24px;
-        }
-        .lightbox-actions-bar {
-          display: flex;
-          border-bottom: 1px solid #f6e6e8;
-          padding-bottom: 16px;
-          margin-bottom: 20px;
-        }
-        .lightbox-action-btn {
+        .lb-tool-btn {
           display: inline-flex;
           align-items: center;
-          gap: 8px;
-          background: transparent;
-          border: 1px solid #ebcbd0;
-          border-radius: 4px;
-          font-size: 13px;
+          gap: 6px;
+          background: none;
+          border: none;
+          color: rgba(255,255,255,.7);
+          font-size: 14px;
           font-weight: 600;
-          padding: 8px 18px;
-          color: var(--muted);
           cursor: pointer;
-          transition: all 0.2s;
+          padding: 6px 12px;
+          border-radius: 20px;
+          transition: color .2s, background .2s;
         }
-        .lightbox-action-btn:hover {
-          background: rgba(125,63,77,0.04);
-          border-color: var(--petal);
-        }
-        .lightbox-action-btn.heart.active {
-          color: #c0392b;
-          border-color: rgba(192,57,43,0.3);
-          background: rgba(192,57,43,0.03);
-        }
-        
-        .lightbox-comments-list-wrapper {
+        .lb-tool-btn:hover { color: #fff; background: rgba(255,255,255,.12); }
+        .lb-tool-btn.hearted { color: #e74c3c; }
+        .lb-tool-btn.active { color: #fff; background: rgba(255,255,255,.18); }
+        .lb-caption-tag {
           display: flex;
           flex-direction: column;
+          align-items: flex-start;
+          margin-left: 8px;
+          padding-left: 12px;
+          border-left: 1px solid rgba(255,255,255,.2);
         }
-        .lightbox-comments-list-wrapper h4 {
-          font-size: 12px;
+        .lb-author {
+          font-size: 11px;
+          color: rgba(255,255,255,.5);
           text-transform: uppercase;
-          letter-spacing: 0.05em;
-          color: var(--wine);
-          margin: 0 0 14px;
+          letter-spacing: .06em;
         }
-        .lightbox-comments-list {
+        .lb-caption-text {
+          font-size: 12px;
+          color: rgba(255,255,255,.75);
+          max-width: 260px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        /* ── Comments slide-up panel ──────────────────────────────────── */
+        .lb-comments-panel {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          max-height: 55vh;
+          background: #fff;
+          border-radius: 16px 16px 0 0;
+          box-shadow: 0 -8px 30px rgba(0,0,0,.3);
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          z-index: 1010;
+        }
+        .lb-comments-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 18px 24px 14px;
+          border-bottom: 1px solid #f0e0e3;
+        }
+        .lb-comments-header h4 {
+          font-size: 14px;
+          font-weight: 600;
+          color: var(--wine);
+          margin: 0;
+          text-transform: uppercase;
+          letter-spacing: .04em;
+        }
+        .lb-comments-close {
+          background: none;
+          border: none;
+          cursor: pointer;
+          color: var(--muted);
+          padding: 4px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: color .2s;
+        }
+        .lb-comments-close:hover { color: var(--wine); }
+        .lb-comments-list {
+          flex: 1;
+          overflow-y: auto;
+          padding: 16px 24px;
           display: flex;
           flex-direction: column;
           gap: 12px;
         }
-        .lightbox-comments-empty {
+        .lb-comments-empty {
           color: var(--muted);
           font-size: 14px;
           font-style: italic;
-          margin: 10px 0;
+          text-align: center;
+          padding: 20px 0;
         }
-        .lightbox-comment-item {
-          background: rgba(125,63,77,0.02);
-          border: 1px solid rgba(125,63,77,0.04);
-          border-radius: 6px;
+        .lb-comment-item {
+          background: rgba(125,63,77,.02);
+          border: 1px solid rgba(125,63,77,.06);
+          border-radius: 8px;
           padding: 12px 16px;
         }
-        .lightbox-comment-meta {
+        .lb-comment-meta {
           display: flex;
           justify-content: space-between;
           font-size: 11px;
           margin-bottom: 6px;
         }
-        .lightbox-comment-meta strong {
-          color: var(--plum);
-        }
-        .lightbox-comment-meta span {
-          color: var(--muted);
-        }
-        .lightbox-comment-item p {
+        .lb-comment-meta strong { color: var(--plum); }
+        .lb-comment-meta span { color: var(--muted); }
+        .lb-comment-item p {
           font-size: 14px;
-          line-height: 1.45;
+          line-height: 1.5;
           margin: 0;
           color: var(--ink);
         }
-        
-        .lightbox-comment-form {
-          border-top: 1px solid #f6e6e8;
-          padding: 24px;
+        .lb-comment-form {
+          padding: 16px 24px 20px;
+          border-top: 1px solid #f0e0e3;
           background: var(--paper);
-        }
-        .lightbox-input-group {
           display: flex;
           flex-direction: column;
           gap: 10px;
         }
-        .lightbox-input {
+        .lb-input {
           width: 100%;
           border: 1px solid #ebcbd0;
           border-radius: 4px;
           padding: 10px 14px;
-          font-size: 14px;
+          font-size: 13px;
           outline: none;
+          background: #fff;
         }
-        .lightbox-input:focus {
+        .lb-input:focus {
           border-color: var(--petal);
-          box-shadow: 0 0 0 2px rgba(231,174,184,0.15);
+          box-shadow: 0 0 0 2px rgba(231,174,184,.15);
         }
-        .lightbox-input.author {
-          max-width: 180px;
-        }
-        .lightbox-text-row {
+        .lb-comment-row {
           display: flex;
-          gap: 10px;
+          gap: 8px;
         }
-        .lightbox-input.text {
-          flex: 1;
-          resize: none;
-        }
-        .lightbox-send-btn {
+        .lb-input-text { flex: 1; }
+        .lb-send-btn {
           background: var(--wine);
-          color: white;
+          color: #fff;
           border: none;
           border-radius: 4px;
-          padding: 0 24px;
+          padding: 0 20px;
           font-size: 13px;
           font-weight: 600;
           cursor: pointer;
-          transition: background 0.2s;
+          transition: background .2s;
         }
-        .lightbox-send-btn:hover {
-          background: var(--plum);
-        }
-        
-        .lightbox-starter-details {
-          padding: 40px 24px;
-          text-align: center;
-          color: var(--muted);
-        }
-        .lightbox-starter-details .starter-label {
-          font-family: 'Playfair Display', Georgia, serif;
-          font-size: 16px;
-          color: var(--plum);
-          font-style: italic;
-          margin: 0 0 6px;
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-          .lightbox-modal-card {
-            flex-direction: column;
-            max-height: 92vh;
-          }
-          .lightbox-left {
-            max-height: 40vh;
-            flex: none;
-          }
-          .lightbox-card-img {
-            max-height: calc(40vh - 20px);
-          }
-          .lightbox-right {
-            max-height: 52vh;
-            border-left: none;
-            border-top: 1px solid #ebcbd0;
-          }
+        .lb-send-btn:hover { background: var(--plum); }
+        .lb-send-btn:disabled { background: var(--petal); cursor: not-allowed; }
+
+        @media (max-width: 640px) {
+          .lb-photo { max-height: 60vh; border-radius: 4px; }
+          .lb-toolbar { flex-wrap: wrap; justify-content: center; }
+          .lb-caption-tag { display: none; }
+          .lb-comments-panel { max-height: 65vh; }
         }
 
-        /* ── Tribute Card Photo Expand Hint ─────────────────────────────── */
+        /* ── Tribute Card Photo Expand Hint ─────────────────────────── */
         .tribute-card-img {
           position: relative;
           overflow: hidden;
