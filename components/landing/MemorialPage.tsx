@@ -1014,6 +1014,18 @@ export function MemorialPage() {
     return <MemorialPageWithConvex />;
   }
 
+  return <MemorialPageStatic />;
+}
+
+function MemorialPageStatic() {
+  const defaultPhotos = [
+    { url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=85", caption: "A beautiful soul, remembered always.", author: "Family" },
+    { url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=85", caption: "Her light continues to shine.", author: "Family" },
+    { url: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=85", caption: "Laughter that echoed through every room.", author: "Family" },
+    { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=85", caption: "Forever in our hearts.", author: "Family" },
+  ];
+  const [activePhoto, setActivePhoto] = useState<{ url: string; caption: string; author: string } | null>(null);
+
   return (
     <>
       <header className="memorial-nav">
@@ -1026,13 +1038,170 @@ export function MemorialPage() {
       </header>
 
       <main>
-        <div style={{ textAlign: "center", color: "var(--muted)", padding: "160px 20px" }}>
-          <h2>Connecting to backend database...</h2>
-          <p style={{ marginTop: "12px", opacity: 0.7 }}>
-            Make sure Convex dev server is running with: <code>npx convex dev</code>
-          </p>
-        </div>
+        <ScrollFrameSequence>
+          <section className="hero-memorial" id="top">
+            <motion.div
+              className="portrait-area"
+              initial={{ opacity: 0, scale: .96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: .9, delay: .15 }}
+            >
+              <div className="frame-wrapper">
+                <div className="portrait-frame">
+                  <img src="/Main.jpg" alt="Portrait of Michellie Starr Waight" className="portrait-img" />
+                </div>
+                <img src="/frame.png" alt="" className="portrait-frame-overlay" aria-hidden="true" />
+              </div>
+              <div className="portrait-identity">
+                <h1 className="portrait-name"><em>Michellie Starr Waight</em></h1>
+                <div className="name-divider-container" aria-hidden="true">
+                  <svg viewBox="0 0 200 20" className="name-divider-svg">
+                    <path d="M 0 10 L 80 10 C 90 10, 94 4, 98 4 C 100 4, 100 10, 100 10 C 100 10, 100 16, 102 16 C 106 16, 110 10, 120 10 L 200 10" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                    <path d="M 100 4 L 103 10 L 100 16 L 97 10 Z" fill="currentColor" />
+                  </svg>
+                </div>
+                <MiniTimeline />
+                <p className="portrait-tagline">Forever in our hearts</p>
+              </div>
+            </motion.div>
+            <a className="scroll-note" href="#life">Scroll to remember</a>
+          </section>
+        </ScrollFrameSequence>
+
+        <section className="life-intro" id="life">
+          <div className="section">
+            <motion.div className="intro-grid" {...reveal}>
+              <div>
+                <p className="section-kicker">A life remembered</p>
+                <h2>Her story was told in <em>love.</em></h2>
+              </div>
+              <p>Michellie Starr Waight brought warmth, kindness, and a bright spirit to everyone fortunate enough to know her. This space is a small gathering place for the stories that made her so unforgettable.</p>
+            </motion.div>
+            <div className="vert-timeline">
+              <div className="vert-timeline-track" aria-hidden="true" />
+              {[
+                { year: "1985", title: "A beautiful beginning", text: "Born May 29th into a family who adored her. From the very first moment, she filled every room with warmth.", icon: "✦" },
+                { year: "Growing up", title: "A life of purpose", text: "A season of growing, giving, and finding her way — a chapter written with grace, curiosity, and kindness.", icon: "❀" },
+                { year: "Always", title: "So much joy", text: "A life full of the people and moments she loved most. Every day she chose love, and everyone around her felt it.", icon: "♡" },
+                { year: "Forever", title: "Forever cherished", text: "Her love continues in every heart she touched. She lives on in laughter, in memory, and in the love she left behind.", icon: "✦" },
+              ].map(({ year, title, text, icon }, i) => (
+                <motion.div
+                  className="vert-timeline-entry"
+                  key={`vtl-${i}`}
+                  initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, amount: 0.25 }}
+                  transition={{ duration: 0.75, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <div className="vert-timeline-node">
+                    <motion.div
+                      className="vert-timeline-dot"
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: i * 0.12 + 0.3 }}
+                    >
+                      <span className="vert-timeline-icon">{icon}</span>
+                    </motion.div>
+                    <div className="vert-timeline-connector" />
+                  </div>
+                  <div className={`vert-timeline-card ${i % 2 === 0 ? 'vert-timeline-card--left' : 'vert-timeline-card--right'}`}>
+                    <span className="vert-timeline-year">{year}</span>
+                    <h3 className="vert-timeline-title">{title}</h3>
+                    <p className="vert-timeline-text">{text}</p>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="section" id="memories">
+          <motion.div className="gallery-head" {...reveal}>
+            <div>
+              <p className="section-kicker">A collection of moments</p>
+              <h2>Remembering her <em>beautifully.</em></h2>
+            </div>
+            <p>Every photograph holds a little piece of her laughter, her light, and the life she shared with us.</p>
+          </motion.div>
+          <motion.div className="photo-wall-grid" {...reveal}>
+            {defaultPhotos.map((photoItem, index) => (
+              <motion.div
+                key={index}
+                className="photo-wall-item"
+                whileHover={{ scale: 1.03 }}
+                onClick={() => setActivePhoto(photoItem)}
+              >
+                <img src={photoItem.url} alt={photoItem.caption} className="photo-wall-img" />
+                <div className="photo-wall-overlay">
+                  <span className="overlay-author">{photoItem.author}</span>
+                  <span className="overlay-caption">"{photoItem.caption}"</span>
+                  <Maximize2 size={16} className="overlay-zoom-icon" />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </section>
+
+        <section className="tribute-section" id="tribute">
+          <div className="section">
+            <motion.div className="tribute-head" {...reveal}>
+              <p className="section-kicker">Share a tribute</p>
+              <h2>Keep her memory <em>close.</em></h2>
+              <p>If you have a favourite story, a treasured photo, or a few words to share, we would love to carry them here with us.</p>
+            </motion.div>
+          </div>
+        </section>
+
+        <section className="section about-person">
+          <motion.div {...reveal} className="about-content">
+            <p className="section-kicker">With gratitude</p>
+            <h2>Thank you for holding her in your <em>hearts.</em></h2>
+            <p>Your presence, your messages, and the memories you share mean more than words can say. May we continue to find comfort in one another and in the beautiful imprint she left on our lives.</p>
+            <p className="signoff"><Heart size={16} fill="currentColor" /> With love, her family</p>
+          </motion.div>
+        </section>
+
+        <section className="section bottom-timeline-section">
+          <div className="bottom-timeline-wrapper">
+            <p className="section-kicker">Her Legacy</p>
+            <MiniTimeline />
+          </div>
+        </section>
+
+        <footer className="footer-memorial">
+          <a href="#top" className="mark footer-mark-two-lines">
+            In loving memory of<br />
+            Michellie Starr Waight
+          </a>
+          <small>Forever loved. Forever remembered.</small>
+        </footer>
       </main>
+
+      <AnimatePresence>
+        {activePhoto && (
+          <motion.div
+            className="lb-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setActivePhoto(null)}
+          >
+            <button className="lb-close" onClick={() => setActivePhoto(null)} aria-label="Close">
+              <X size={24} />
+            </button>
+            <motion.div
+              className="lb-photo-wrap"
+              initial={{ scale: 0.94, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.94, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img src={activePhoto.url} alt={activePhoto.caption} className="lb-photo" />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
