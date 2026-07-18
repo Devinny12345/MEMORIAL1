@@ -82,9 +82,10 @@ interface TributeCardProps {
     hearts: string[];
   };
   sessionId: string;
+  onPhotoClick?: () => void;
 }
 
-function TributeCard({ tribute, sessionId }: TributeCardProps) {
+function TributeCard({ tribute, sessionId, onPhotoClick }: TributeCardProps) {
   const toggleHeart = useMutation(api.tributes.toggleHeart);
   const addComment = useMutation(api.tributes.addComment);
 
@@ -134,8 +135,12 @@ function TributeCard({ tribute, sessionId }: TributeCardProps) {
       viewport={{ once: true }}
     >
       {tribute.photoUrl && (
-        <div className="tribute-card-img">
+        <div className="tribute-card-img" onClick={(e) => { e.stopPropagation(); onPhotoClick?.(); }} style={{ cursor: 'zoom-in', position: 'relative' }}>
           <img src={tribute.photoUrl} alt={`Shared by ${tribute.name}`} />
+          <div className="tribute-photo-expand-hint">
+            <Maximize2 size={16} />
+            <span>Click to expand</span>
+          </div>
         </div>
       )}
       <div className="tribute-card-body">
@@ -575,6 +580,7 @@ function MemorialPageWithConvex() {
                       key={tribute.id as string}
                       tribute={tribute as any}
                       sessionId={sessionId}
+                      onPhotoClick={tribute.photoUrl ? () => setActivePhoto({ url: tribute.photoUrl!, caption: tribute.message, author: tribute.name, tribute }) : undefined}
                     />
                   ))}
                 </div>
@@ -968,7 +974,7 @@ function MemorialPageWithConvex() {
         @media (max-width: 768px) {
           .lightbox-modal-card {
             flex-direction: column;
-            max-height: 90vh;
+            max-height: 92vh;
           }
           .lightbox-left {
             max-height: 40vh;
@@ -978,10 +984,39 @@ function MemorialPageWithConvex() {
             max-height: calc(40vh - 20px);
           }
           .lightbox-right {
-            max-height: 50vh;
+            max-height: 52vh;
             border-left: none;
             border-top: 1px solid #ebcbd0;
           }
+        }
+
+        /* ── Tribute Card Photo Expand Hint ─────────────────────────────── */
+        .tribute-card-img {
+          position: relative;
+          overflow: hidden;
+        }
+        .tribute-photo-expand-hint {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          background: rgba(16, 10, 12, 0.55);
+          backdrop-filter: blur(2px);
+          color: white;
+          font-size: 12px;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          pointer-events: none;
+          z-index: 2;
+        }
+        .tribute-card-img:hover .tribute-photo-expand-hint {
+          opacity: 1;
         }
       `}</style>
     </>
