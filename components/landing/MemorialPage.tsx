@@ -764,13 +764,13 @@ function MemorialPageWithConvex() {
         }
         .lb-close {
           position: absolute;
-          top: 16px;
-          right: 16px;
+          top: 12px;
+          right: 12px;
           background: rgba(255,255,255,.12);
           border: none;
           color: white;
-          width: 44px;
-          height: 44px;
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -782,27 +782,27 @@ function MemorialPageWithConvex() {
         .lb-close:hover { background: rgba(255,255,255,.25); }
         .lb-photo-wrap {
           position: relative;
-          max-width: 92vw;
-          max-height: 88vh;
+          width: 90vw;
+          max-width: 500px;
           display: flex;
           flex-direction: column;
           align-items: center;
           cursor: default;
         }
         .lb-photo {
-          max-width: 100%;
-          max-height: 80vh;
+          width: 100%;
+          max-height: 55vh;
           object-fit: contain;
-          border-radius: 6px;
-          box-shadow: 0 20px 60px rgba(0,0,0,.5);
+          border-radius: 8px;
+          box-shadow: 0 10px 40px rgba(0,0,0,.5);
           display: block;
         }
         .lb-toolbar {
           display: flex;
           align-items: center;
-          gap: 12px;
-          margin-top: 14px;
-          padding: 10px 18px;
+          gap: 8px;
+          margin-top: 10px;
+          padding: 8px 14px;
           background: rgba(255,255,255,.1);
           border-radius: 30px;
           backdrop-filter: blur(6px);
@@ -810,14 +810,14 @@ function MemorialPageWithConvex() {
         .lb-tool-btn {
           display: inline-flex;
           align-items: center;
-          gap: 6px;
+          gap: 5px;
           background: none;
           border: none;
           color: rgba(255,255,255,.7);
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 600;
           cursor: pointer;
-          padding: 6px 12px;
+          padding: 5px 10px;
           border-radius: 20px;
           transition: color .2s, background .2s;
         }
@@ -828,20 +828,20 @@ function MemorialPageWithConvex() {
           display: flex;
           flex-direction: column;
           align-items: flex-start;
-          margin-left: 8px;
-          padding-left: 12px;
+          margin-left: 6px;
+          padding-left: 10px;
           border-left: 1px solid rgba(255,255,255,.2);
         }
         .lb-author {
-          font-size: 11px;
+          font-size: 10px;
           color: rgba(255,255,255,.5);
           text-transform: uppercase;
           letter-spacing: .06em;
         }
         .lb-caption-text {
-          font-size: 12px;
+          font-size: 11px;
           color: rgba(255,255,255,.75);
-          max-width: 260px;
+          max-width: 180px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -852,10 +852,10 @@ function MemorialPageWithConvex() {
           bottom: 0;
           left: 0;
           right: 0;
-          max-height: 55vh;
+          max-height: 45vh;
           background: #fff;
-          border-radius: 16px 16px 0 0;
-          box-shadow: 0 -8px 30px rgba(0,0,0,.3);
+          border-radius: 14px 14px 0 0;
+          box-shadow: 0 -6px 24px rgba(0,0,0,.3);
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -865,11 +865,11 @@ function MemorialPageWithConvex() {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          padding: 18px 24px 14px;
+          padding: 14px 20px 12px;
           border-bottom: 1px solid #f0e0e3;
         }
         .lb-comments-header h4 {
-          font-size: 14px;
+          font-size: 13px;
           font-weight: 600;
           color: var(--wine);
           margin: 0;
@@ -892,52 +892,52 @@ function MemorialPageWithConvex() {
         .lb-comments-list {
           flex: 1;
           overflow-y: auto;
-          padding: 16px 24px;
+          padding: 12px 20px;
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 10px;
         }
         .lb-comments-empty {
           color: var(--muted);
-          font-size: 14px;
+          font-size: 13px;
           font-style: italic;
           text-align: center;
-          padding: 20px 0;
+          padding: 16px 0;
         }
         .lb-comment-item {
           background: rgba(125,63,77,.02);
           border: 1px solid rgba(125,63,77,.06);
-          border-radius: 8px;
-          padding: 12px 16px;
+          border-radius: 6px;
+          padding: 10px 14px;
         }
         .lb-comment-meta {
           display: flex;
           justify-content: space-between;
-          font-size: 11px;
-          margin-bottom: 6px;
+          font-size: 10px;
+          margin-bottom: 4px;
         }
         .lb-comment-meta strong { color: var(--plum); }
         .lb-comment-meta span { color: var(--muted); }
         .lb-comment-item p {
-          font-size: 14px;
-          line-height: 1.5;
+          font-size: 13px;
+          line-height: 1.4;
           margin: 0;
           color: var(--ink);
         }
         .lb-comment-form {
-          padding: 16px 24px 20px;
+          padding: 12px 20px 16px;
           border-top: 1px solid #f0e0e3;
           background: var(--paper);
           display: flex;
           flex-direction: column;
-          gap: 10px;
+          gap: 8px;
         }
         .lb-input {
           width: 100%;
           border: 1px solid #ebcbd0;
           border-radius: 4px;
-          padding: 10px 14px;
-          font-size: 13px;
+          padding: 8px 12px;
+          font-size: 12px;
           outline: none;
           background: #fff;
         }
@@ -947,7 +947,7 @@ function MemorialPageWithConvex() {
         }
         .lb-comment-row {
           display: flex;
-          gap: 8px;
+          gap: 6px;
         }
         .lb-input-text { flex: 1; }
         .lb-send-btn {
@@ -955,8 +955,8 @@ function MemorialPageWithConvex() {
           color: #fff;
           border: none;
           border-radius: 4px;
-          padding: 0 20px;
-          font-size: 13px;
+          padding: 0 16px;
+          font-size: 12px;
           font-weight: 600;
           cursor: pointer;
           transition: background .2s;
@@ -965,10 +965,15 @@ function MemorialPageWithConvex() {
         .lb-send-btn:disabled { background: var(--petal); cursor: not-allowed; }
 
         @media (max-width: 640px) {
-          .lb-photo { max-height: 60vh; border-radius: 4px; }
-          .lb-toolbar { flex-wrap: wrap; justify-content: center; }
+          .lb-photo-wrap { width: 94vw; max-width: none; }
+          .lb-photo { max-height: 45vh; border-radius: 6px; }
+          .lb-toolbar { gap: 6px; padding: 6px 10px; }
+          .lb-tool-btn { padding: 4px 8px; font-size: 12px; }
           .lb-caption-tag { display: none; }
-          .lb-comments-panel { max-height: 65vh; }
+          .lb-comments-panel { max-height: 50vh; }
+          .lb-comments-list { padding: 10px 16px; }
+          .lb-comment-form { padding: 10px 16px 14px; }
+          .lb-close { top: 8px; right: 8px; width: 36px; height: 36px; }
         }
 
         /* ── Tribute Card Photo Expand Hint ─────────────────────────── */

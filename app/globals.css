@@ -464,6 +464,14 @@ h2 em,h1 em{font-weight:400;color:var(--wine)}
 }
 /* Responsive: stack timeline vertically on mobile */
 @media (max-width: 640px) {
+  .frame-wrapper {
+    width: min(420px, 90vw);
+    height: min(560px, 120vw);
+  }
+  .portrait-frame {
+    width: min(360px, 80vw);
+    height: min(480px, 107vw);
+  }
   .vert-timeline-track { left: 22px; }
   .vert-timeline-entry,
   .vert-timeline-entry:nth-child(odd),
