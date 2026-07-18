@@ -763,9 +763,9 @@ function MemorialPageWithConvex() {
           flex-direction: column;
           background: white;
           border-radius: 8px;
-          max-width: 800px;
+          max-width: 960px;
           width: 100%;
-          max-height: 90vh;
+          max-height: 92vh;
           overflow-y: auto;
           box-shadow: 0 20px 50px rgba(0,0,0,0.5);
           cursor: default;
@@ -777,12 +777,12 @@ function MemorialPageWithConvex() {
           align-items: center;
           justify-content: center;
           padding: 0;
-          max-height: 75vh;
+          max-height: 90vh;
           overflow: hidden;
         }
         .lightbox-card-img {
           width: 100%;
-          max-height: 75vh;
+          max-height: 90vh;
           object-fit: contain;
           display: block;
         }
