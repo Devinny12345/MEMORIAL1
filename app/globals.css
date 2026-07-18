@@ -1011,9 +1011,23 @@ h2 em,h1 em{font-weight:400;color:var(--wine)}
 
 @media (max-width: 640px) {
   .photo-wall-grid {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-    gap: 14px;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 4px;
   }
+  .photo-wall-item {
+    aspect-ratio: 3/4;
+    border-radius: 8px;
+    border: 3px solid #fff;
+  }
+  .photo-wall-overlay {
+    opacity: 1;
+    background: linear-gradient(to top, rgba(16,10,12,.82) 0%, transparent 70%);
+    padding: 10px;
+  }
+  .overlay-author { font-size: 9px; }
+  .overlay-caption { font-size: 11px; padding-right: 0; }
+  .overlay-zoom-icon { right: 10px; bottom: 10px; opacity: 1; }
 }
 
 /* ── Center and adjust spacing of bottom timeline / legacy section ─────── */
