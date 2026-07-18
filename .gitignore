@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment
+.env.local
+.env*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+outputs/
+
+# Convex generated
+.convex/
+
+# Large root-level media files (duplicates of public/ versions)
+/Main.jpg
+/frame.png
+/moments 1.jpg
+/ezgif-7ae3e5ce339d427b.gif
+
+# Work directory
+work/

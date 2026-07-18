@@ -1,0 +1,1 @@
+export function Footer() { return <footer><a href="#top" className="brand"><span>say yes</span><i>belize</i></a><p>Beautiful beginnings, made in Belize.</p><small>© {new Date().getFullYear()} Say Yes Belize. All love reserved.</small></footer>; }

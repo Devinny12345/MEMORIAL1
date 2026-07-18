@@ -1,0 +1,2 @@
+type Props = { image: string; title?: string; tone?: "sage" | "blush" | "sand"; phone?: boolean };
+export function DeviceFrame({ image, title = "Wedding website preview", tone = "sage", phone = false }: Props) { return <div className={`device-wrap ${tone} ${phone ? "phone-wrap" : ""}`}><div className={`device ${phone ? "phone" : "browser"}`}><div className="device-top">{phone ? <span className="notch" /> : <><span /><span /><span /><b>sayyesbelize.com</b></>}</div><div className="screen"><img src={image} alt={title} /></div></div></div>; }
