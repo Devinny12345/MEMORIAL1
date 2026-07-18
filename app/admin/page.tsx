@@ -5,7 +5,21 @@ import { api } from "../../convex/_generated/api";
 import { Trash2, Lock, ArrowLeft, Heart, MessageSquare } from "lucide-react";
 import { motion } from "framer-motion";
 
+const convexEnabled = !!process.env.NEXT_PUBLIC_CONVEX_URL;
+
 export default function AdminPage() {
+  if (!convexEnabled) {
+    return (
+      <div style={{ textAlign: "center", color: "#846b72", padding: "160px 20px" }}>
+        <h2>Admin requires a database connection.</h2>
+        <p style={{ marginTop: 12, opacity: 0.7 }}>Configure Convex to enable the admin panel.</p>
+      </div>
+    );
+  }
+  return <AdminPageInner />;
+}
+
+function AdminPageInner() {
   const [password, setPassword] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
