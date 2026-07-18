@@ -366,10 +366,8 @@ function MemorialPageWithConvex() {
     }));
 
   const defaultPhotos = [
-    { url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=85", caption: "A beautiful soul, remembered always.", author: "Family", tribute: null },
-    { url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=85", caption: "Her light continues to shine.", author: "Family", tribute: null },
-    { url: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=85", caption: "Laughter that echoed through every room.", author: "Family", tribute: null },
-    { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=85", caption: "Forever in our hearts.", author: "Family", tribute: null },
+    { url: "/moments-1.jpg", caption: "A moment we will always cherish.", author: "Family", tribute: null },
+    { url: "/Main.jpg", caption: "In loving memory.", author: "Family", tribute: null },
   ];
 
   const allPhotos = [...dbPhotos, ...defaultPhotos.filter((dp) => !dbPhotos.some((db) => db.url === dp.url))];
@@ -1019,10 +1017,8 @@ export function MemorialPage() {
 
 function MemorialPageStatic() {
   const defaultPhotos = [
-    { url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=800&q=85", caption: "A beautiful soul, remembered always.", author: "Family" },
-    { url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=800&q=85", caption: "Her light continues to shine.", author: "Family" },
-    { url: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=800&q=85", caption: "Laughter that echoed through every room.", author: "Family" },
-    { url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=85", caption: "Forever in our hearts.", author: "Family" },
+    { url: "/moments-1.jpg", caption: "A moment we will always cherish.", author: "Family" },
+    { url: "/Main.jpg", caption: "In loving memory.", author: "Family" },
   ];
   const [activePhoto, setActivePhoto] = useState<{ url: string; caption: string; author: string } | null>(null);
 
