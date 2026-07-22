@@ -3,6 +3,7 @@ import { Heart, MessageCircleHeart, Camera, X, MessageSquare, Maximize2 } from "
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { ScrollFrameSequence } from "./ScrollFrameSequence";
+import ScrollExpandMedia from "../ui/scroll-expansion-hero";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
@@ -389,8 +390,16 @@ function MemorialPageWithConvex() {
       </header>
 
       <main>
-        <ScrollFrameSequence>
-          <section className="hero-memorial" id="top">
+        <ScrollExpandMedia
+          mediaType="image"
+          mediaSrc="/Main.jpg"
+          bgImageSrc="/moments-1.jpg"
+          title="Michellie Starr Waight"
+          date="Forever in our hearts"
+          scrollToExpand="Scroll to remember"
+          textBlend
+        >
+          <div className="hero-memorial" id="top" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, padding: '40px 0' }}>
             <motion.div
               className="portrait-area"
               initial={{ opacity: 0, scale: .96 }}
@@ -411,17 +420,12 @@ function MemorialPageWithConvex() {
                     <path d="M 100 4 L 103 10 L 100 16 L 97 10 Z" fill="currentColor" />
                   </svg>
                 </div>
-                
-                {/* Hero Timeline */}
                 <MiniTimeline />
-                
                 <p className="portrait-tagline">Forever in our hearts</p>
               </div>
             </motion.div>
-
-            <a className="scroll-note" href="#life">Scroll to remember</a>
-          </section>
-        </ScrollFrameSequence>
+          </div>
+        </ScrollExpandMedia>
 
         <section className="life-intro" id="life">
           <div className="section">
@@ -965,14 +969,34 @@ function MemorialPageWithConvex() {
         .lb-send-btn:disabled { background: var(--petal); cursor: not-allowed; }
 
         @media (max-width: 640px) {
-          .lb-photo-wrap { width: 94vw; max-width: none; }
-          .lb-photo { max-height: 45vh; border-radius: 6px; }
-          .lb-toolbar { gap: 6px; padding: 6px 10px; }
-          .lb-tool-btn { padding: 4px 8px; font-size: 12px; }
+          .lb-overlay { align-items: flex-start; padding-top: 10vh; }
+          .lb-photo-wrap {
+            width: 92vw;
+            max-width: none;
+            background: #1a1214;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 12px 40px rgba(0,0,0,.6);
+          }
+          .lb-photo { max-height: 42vh; border-radius: 0; width: 100%; }
+          .lb-toolbar {
+            margin-top: 0;
+            padding: 10px 14px;
+            border-radius: 0;
+            background: rgba(26,18,20,.95);
+            border-top: 1px solid rgba(255,255,255,.08);
+            flex-wrap: wrap;
+            justify-content: center;
+          }
           .lb-caption-tag { display: none; }
-          .lb-comments-panel { max-height: 50vh; }
-          .lb-comments-list { padding: 10px 16px; }
-          .lb-comment-form { padding: 10px 16px 14px; }
+          .lb-comments-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 50vh;
+            border-radius: 14px 14px 0 0;
+          }
           .lb-close { top: 8px; right: 8px; width: 36px; height: 36px; }
         }
 
@@ -1039,8 +1063,16 @@ function MemorialPageStatic() {
       </header>
 
       <main>
-        <ScrollFrameSequence>
-          <section className="hero-memorial" id="top">
+        <ScrollExpandMedia
+          mediaType="image"
+          mediaSrc="/Main.jpg"
+          bgImageSrc="/moments-1.jpg"
+          title="Michellie Starr Waight"
+          date="Forever in our hearts"
+          scrollToExpand="Scroll to remember"
+          textBlend
+        >
+          <div className="hero-memorial" id="top" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24, padding: '40px 0' }}>
             <motion.div
               className="portrait-area"
               initial={{ opacity: 0, scale: .96 }}
@@ -1065,9 +1097,8 @@ function MemorialPageStatic() {
                 <p className="portrait-tagline">Forever in our hearts</p>
               </div>
             </motion.div>
-            <a className="scroll-note" href="#life">Scroll to remember</a>
-          </section>
-        </ScrollFrameSequence>
+          </div>
+        </ScrollExpandMedia>
 
         <section className="life-intro" id="life">
           <div className="section">
